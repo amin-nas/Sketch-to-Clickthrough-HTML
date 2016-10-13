@@ -1,0 +1,315 @@
+const linkLayerPrefix  = "[linkto:";
+const fixedLayerPrefix = "[fixed:";
+
+function exportLayerToPath(doc, layer, path, scale, format, suffix) {
+
+  var scale = 1
+  var rect = layer.absoluteRect().rect(),
+      slice = [MSExportRequest requestWithRect:rect scale:scale],
+      layerName = layer.objectID() + ((typeof suffix !== 'undefined') ? suffix : ""),
+      format = (typeof format !== 'undefined') ? format : "png";
+
+    slice.setShouldTrim(0)
+    slice.setSaveForWeb(1)
+    slice.configureForLayer(layer)
+    slice.setName(layerName)
+    slice.setFormat(format)
+    doc.saveArtboardOrSlice_toFile(slice, path)
+}
+
+function showFixedLayers (doc) {
+  return showOrHideFixedLayers(true, doc);
+}
+
+function hideFixedLayers (doc) {
+  return showOrHideFixedLayers(false, doc);
+}
+
+function toggleFixedLayers(doc) {
+  return showOrHideFixedLayers (-1, doc);
+}
+
+function showOrHideFixedLayers (shouldShowLayers, doc) {
+  var layers = doc.currentPage().children().objectEnumerator();
+  while (layer = layers.nextObject()) {
+
+    var name = layer.name();
+    if (name == fixedLayerPrefix || name.indexOf(fixedLayerPrefix) != -1) {
+
+      if (shouldShowLayers === -1) {
+        // decide whether to hide or show all layers, based on the visibility of the first layer we find
+        shouldShowLayers = ![layer isVisible];
+      }
+
+      [layer setIsVisible:shouldShowLayers];
+    }
+  }
+  return shouldShowLayers;
+}
+
+function displayMissingArtboardsWarnings (targets, artboards) {
+  // Display a warning if there are link targets on this page that don't have a corresponding artboard
+  var warnings = '';
+  targets.sort();
+  for (var i = 0; i < targets.length; i++) {
+    var target = targets[i];
+    if (artboards.indexOf(target) === -1) {
+      warnings += '\n· ' + target
+    };
+  };
+
+  if (warnings !== '') {
+    warnings += '\n\nDon’t worry, the prototype will be exported anyway.'
+    var app = [NSApplication sharedApplication];
+    [app displayDialog:warnings withTitle:"There are links to missing artboards:"];
+  }
+}
+
+function createFolder(name) {
+  var fileManager = [NSFileManager defaultManager];
+  [fileManager createDirectoryAtPath:name withIntermediateDirectories:true attributes:nil error:nil];
+}
+
+function saveTextToFile (filename, text) {
+  var path = [@"" stringByAppendingString:filename];
+  var str = [@"" stringByAppendingString:text];
+  str.dataUsingEncoding_(NSUTF8StringEncoding).writeToFile_atomically_(path, true);
+}
+
+function fileSaver() {
+    // Panel
+    var openPanel = [NSOpenPanel openPanel]
+
+    [openPanel setTitle: "Choose a location…"]
+    [openPanel setMessage: "Select the export location…"];
+    [openPanel setPrompt: "Export"];
+
+    [openPanel setCanCreateDirectories: true]
+    [openPanel setCanChooseFiles: false]
+    [openPanel setCanChooseDirectories: true]
+    [openPanel setAllowsMultipleSelection: false]
+    [openPanel setShowsHiddenFiles: false]
+    [openPanel setExtensionHidden: false]
+
+    // [openPanel setDirectoryURL:url]
+
+    var openPanelButtonPressed = [openPanel runModal]
+    if (openPanelButtonPressed == NSFileHandlingPanelOKButton) {
+        allowedUrl = [openPanel URL]
+    }
+    return allowedUrl
+}
+
+// SANDBOX
+AppSandbox = function(){ }
+AppSandbox.prototype.authorize = function(path, callback){
+  log("AppSandbox.authorize("+path+")")
+  var success = true
+
+  // [allowedUrl startAccessingSecurityScopedResource]
+  callback.call(this,success)
+  // [allowedUrl stopAccessingSecurityScopedResource]
+}
+AppSandbox.prototype.key_for_url = function(url){
+  return "bd_" + [url absoluteString]
+}
+AppSandbox.prototype.clear_key = function(key){
+  var def = [NSUserDefaults standardUserDefaults]
+  [def setObject:nil forKey:key]
+}
+AppSandbox.prototype.file_picker = function(url) {
+  // Panel
+  var openPanel = [NSOpenPanel openPanel]
+
+  [openPanel setTitle:"Sketch Authorization"]
+  [openPanel setMessage:"Due to Apple's Sandboxing technology, Sketch needs your permission to write to this folder."];
+  [openPanel setPrompt:"Authorize"];
+
+  [openPanel setCanCreateDirectories:false]
+  [openPanel setCanChooseFiles:true]
+  [openPanel setCanChooseDirectories:true]
+  [openPanel setAllowsMultipleSelection:false]
+  [openPanel setShowsHiddenFiles:false]
+  [openPanel setExtensionHidden:false]
+
+  [openPanel setDirectoryURL:url]
+
+  var openPanelButtonPressed = [openPanel runModal]
+  if (openPanelButtonPressed == NSFileHandlingPanelOKButton) {
+    allowedUrl = [openPanel URL]
+  }
+  return allowedUrl
+}
+
+AppSandbox.prototype.get_data_for_key = function(key){
+  var def = [NSUserDefaults standardUserDefaults]
+  return [def objectForKey:key]
+}
+
+AppSandbox.prototype.set_data_for_key = function(data,key){
+  var defaults = [NSUserDefaults standardUserDefaults],
+      default_values = [NSMutableDictionary dictionary]
+
+  [default_values setObject:data forKey:key]
+  [defaults registerDefaults:default_values]
+}
+
+// MAIN
+
+var onRun = function(context) {
+
+  var doc = context.document
+
+  // open the system dialog to choose the export location
+  var fileURL = fileSaver();
+  var exportPath = fileURL.path() + '/' + [doc displayName] + '-html/';
+
+  // Authorize Sketch to save a file
+  new AppSandbox().authorize(exportPath, exportClickDummy);
+
+  function exportClickDummy () {
+
+    var doc = context.document
+    var html = '';
+    var artboardNames = [];
+    var linkTargets = [];
+
+    var HTML_HEAD = '<!DOCTYPE html>\n\
+    <html lang="en">\n\
+    <head>\n\
+      <meta charset="utf-8">\n\
+      <title>' + [doc displayName] + '</title>\n\
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">\n\
+      <script type="text/javascript"> \n\
+        document.onmousedown = function() { \n\
+          document.body.setAttribute("class", "is-highlighted"); \n\
+        } \n\
+        document.onmouseup = function() { \n\
+          document.body.setAttribute("class", ""); \n\
+        } \n\
+      </script> \n\
+      <style> \n\
+        html, body { \n\
+          padding: 0; \n\
+          margin: 0; \n\
+        } \n\
+        a { \n\
+          position: absolute; \n\
+          z-index: 10; \n\
+        } \n\
+        body.is-highlighted a { \n\
+          background-color: #0000ff; \n\
+          opacity: .2; \n\
+        } \n\
+        main { \n\
+          position: relative; \n\
+          display: inline-block; \n\
+        } \n\
+        .top { \n\
+          position: fixed; \n\
+          z-index: 2; \n\
+          top: 0; \n\
+        } \n\
+        .left { \n\
+          position: fixed; \n\
+          z-index: 2; \n\
+          top: 0; \n\
+          left: 0; \n\
+        } \n\
+        .bottom { \n\
+          position: fixed; \n\
+          z-index: 2; \n\
+          bottom: 0; \n\
+        } \n\
+        .right { \n\
+          position: fixed; \n\
+          z-index: 2; \n\
+          top: 0; \n\
+          right: 0; \n\
+        } \n\
+      </style> \n\
+    </head>\n\
+    <body><main>\n';
+
+    var HTML_FOOT = '</main></body></html>\n';
+
+    var artboards = doc.currentPage().artboards().objectEnumerator();
+
+    createFolder(exportPath);
+
+    while (artboard = artboards.nextObject()) {
+
+      var artboardName = artboard.name().trim();
+
+      artboardNames.push(artboardName);
+
+      html = HTML_HEAD;
+      html += '<!-- ' + artboardName + ' -->\n';
+      html += '<img src="img/' + artboardName + '.png">\n';
+
+      var layers = artboard.children().objectEnumerator();
+
+      while (layer = layers.nextObject()) {
+
+        var name = layer.name();
+        var layerId = layer.objectID();
+
+        if (name === linkLayerPrefix || name.indexOf(linkLayerPrefix) !== -1) {
+
+          var linkTarget = name.substring(name.lastIndexOf("linkto:")+7,name.lastIndexOf("]"))
+          linkTargets.push(linkTarget);
+
+          if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
+            linkTarget = linkTarget + '.html';
+          } else {
+            linkTarget = '';
+          }
+
+          if (typeof layer.frame === 'function') {
+            var lx = layer.frame().x();
+            var ly = layer.frame().y();
+            var lw = layer.frame().width();
+            var lh = layer.frame().height();
+            html = html + '<a href="' + linkTarget + '" style="left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n';
+          }
+        } else if (name === fixedLayerPrefix || name.indexOf(fixedLayerPrefix) !== -1) {
+          var position = name.substring(name.lastIndexOf("fixed:")+6,name.lastIndexOf("]"))
+
+          var filePath = exportPath + "img/" + layerId + ".png"
+          exportLayerToPath(doc, layer, filePath);
+
+          if (position == "left" || position == "right") {
+            if (typeof layer.frame === 'function') {
+              var ly = layer.frame().y();
+            }
+            html = html + '<img class="'+ position +'" style="top: ' + ly + 'px;" src="img/' + layerId + '.png">\n';
+          } else {
+            if (typeof layer.frame === 'function') {
+              var lx = layer.frame().x();
+            }
+            html = html + '<img class="'+ position +'" style="left: ' + lx + 'px;" src="img/' + layerId + '.png">\n';
+          }
+        }
+      }
+      html += HTML_FOOT;
+
+      var htmlPath = exportPath + artboardName + '.html';
+      saveTextToFile(htmlPath, html);
+    }
+
+    hideFixedLayers(doc);
+
+    var slices = doc.currentPage().artboards().objectEnumerator();
+
+    while (slice = slices.nextObject()) {
+      [doc saveArtboardOrSlice:slice toFile:exportPath + 'img/' + slice.name() + '.png'];
+    }
+
+    displayMissingArtboardsWarnings(linkTargets, artboardNames);
+
+    showFixedLayers(doc);
+
+    doc.showMessage('HTML files exported to: ' + exportPath);
+  }
+
+}

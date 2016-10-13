@@ -1,0 +1,24 @@
+{
+  "author" : "Amin Nassiri",
+  "commands" : [
+    {
+      "script" : "script.cocoascript",
+      "name" : "Export to HTML",
+      "handlers" : {
+        "run" : "onRun"
+      },
+      "identifier" : "com.bohemiancoding.sketch.runscriptidentifier"
+    }
+  ],
+  "menu" : {
+    "items" : [
+      "com.bohemiancoding.sketch.runscriptidentifier"
+    ],
+    "title" : "Export to HTML"
+  },
+  "identifier" : "com.example.sketch.07d43ad7-b900-4707-abc7-b9b406772552",
+  "version" : "1.0",
+  "description" : "Sketch plugin to create html ",
+  "authorEmail" : "amin.nas@me.com",
+  "name" : "Sketch to Clickthrough HTML"
+}
