@@ -1,23 +1,27 @@
->**It works, but consider this as a work in progress :)
+>It works, but consider this as a work in progress :)
 
 # Sketch-to-Clickthrough-HTML
 
 Convert your artboards into HTML pages.
+
 
 ## Download & Installation
 
 1. Download the plugin
 2. Double click "Sketch to HTML.sketchplugin". It will be automatically installed into Sketch.
 
-  
+
+
 ## OPTIONS
 
 ### Link a layer to another artboard
+
 1. Select any layer of your artboard
 2. Name the layer with [linkto:artboard_name] Layer_Name
 
 This will add an HTML link tag on top of that layer when it's exported.
 Note that the layer has to be a top-level layer, meaning it cannot be nested inside another layer.
+
 
 ### Fix a layer position
 In case you need to have fixed top nav, fixed footer, fixed sidebar, ...
