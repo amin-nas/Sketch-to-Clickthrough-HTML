@@ -83,6 +83,8 @@ function fileSaver() {
 function displayMissingArtboardsWarnings (sketch, targets, artboards) {
   var warnings = '';
   targets.sort();
+  log(artboards);
+  log(targets);
   for (var i = 0; i < targets.length; i++) {
     var target = targets[i];
     if (artboards.indexOf(target) === -1) {
@@ -107,9 +109,10 @@ function getArtboardsList (doc) {
   var artboardsList = [];
 
   while (artboard = artboards.nextObject()) {
-    var artboardName = artboard.name();
+    var artboardName = artboard.name().trim();
     artboardsList.push(artboardName);
   }
 
   return artboardsList;
 }
+
