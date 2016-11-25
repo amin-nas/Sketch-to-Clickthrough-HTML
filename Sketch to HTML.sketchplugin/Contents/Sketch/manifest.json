@@ -5,19 +5,34 @@
       "script" : "script.cocoascript",
       "name" : "Export to HTML",
       "handlers" : {
-        "run" : "onRun"
+        "run" : "exportToHtml"
       },
-      "identifier" : "com.bohemiancoding.sketch.runscriptidentifier"
+      "identifier" : "exportToHtml"
+    },{
+      "script" : "script.cocoascript",
+      "name" : "Link selected layer to...",
+      "handlers" : {
+        "run" : "setLinkedLayer"
+      },
+      "identifier" : "setLinkedLayer"
+    },{
+      "script" : "script.cocoascript",
+      "name" : "Fix selected layer to...",
+      "handlers" : {
+        "run" : "setFixedLayer"
+      },
+      "identifier" : "setFixedLayer"
     }
   ],
   "menu" : {
     "items" : [
-      "com.bohemiancoding.sketch.runscriptidentifier"
+      "exportToHtml",
+      "setLinkedLayer",
+      "setFixedLayer"
     ],
     "title" : "Export to HTML"
   },
-  "identifier" : "com.example.sketch.07d43ad7-b900-4707-abc7-b9b406772552",
-  "version" : "1.0",
+  "version" : "1.1",
   "description" : "Sketch plugin to create html ",
   "authorEmail" : "amin.nas@me.com",
   "name" : "Sketch to Clickthrough HTML"

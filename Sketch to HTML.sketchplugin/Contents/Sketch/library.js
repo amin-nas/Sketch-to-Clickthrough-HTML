@@ -1,57 +1,51 @@
 
+/**
+    Export artboards and fixed layers
+    Scale set to 2 for retina displays 
+  */
 
-function showLinkLayers () {
-  return showOrHideLinkLayers(true);
+function exportLayerToPath(doc, layer, path) {
+  var frame = [layer frame];
+  var slice_name = [layer name];
+
+  var copy = [layer duplicate];
+  var rect = copy.absoluteRect().rect()
+  var request = MSExportRequest.new();
+  request.rect = rect;
+  request.scale = 2;
+  [copy removeFromParent];
+  
+  doc.saveArtboardOrSlice_toFile(request, path)
 }
 
-function hideLinkLayers () {
-  return showOrHideLinkLayers(false);
-}
 
-function toggleLinkLayers() {
-  return showOrHideLinkLayers (-1);
-}
 
-function showOrHideLinkLayers (shouldShowLayers) {
-  var layers = doc.currentPage().children().objectEnumerator();
+/**
+    Show fixed layers
+    Used after an artboard is exported
+  */
+
+function showFixedLayers (artboard) {
+  var layers = artboard.children().objectEnumerator();
   while (layer = layers.nextObject()) {
-
     var name = layer.name();
-    if (name == linkLayerPrefix || name.indexOf(linkLayerPrefix) != -1) {
-
-      if (shouldShowLayers === -1) {
-        // decide whether to hide or show all layers, based on the visibility of the first layer we find
-        shouldShowLayers = ![layer isVisible];
-      }
-
-      [layer setIsVisible:shouldShowLayers];
+    if (name == fixedLayerPrefix || name.indexOf(fixedLayerPrefix) != -1) {
+      [layer setIsVisible:true];
     }
   }
-  return shouldShowLayers;
 }
 
-function displayMissingArtboardsWarnings (targets, artboards) {
-  // Display a warning if there are link targets on this page that don't have a corresponding artboard
-  var warnings = '';
-  targets.sort();
-  for (var i = 0; i < targets.length; i++) {
-    var target = targets[i];
-    if (artboards.indexOf(target) === -1) {
-      warnings += '\n· ' + target
-    };
-  };
 
-  if (warnings !== '') {
-    warnings += '\n\nThe prototype will be exported anyway.'
-    var app = [NSApplication sharedApplication];
-    [app displayDialog:warnings withTitle:"There are links to missing artboards:"];
-  }
-}
+
+/**
+    Export html files
+  */
 
 function createFolder(name) {
   var fileManager = [NSFileManager defaultManager];
   [fileManager createDirectoryAtPath:name withIntermediateDirectories:true attributes:nil error:nil];
 }
+
 
 function saveTextToFile (filename, text) {
   var path = [@"" stringByAppendingString:filename];
@@ -59,3 +53,63 @@ function saveTextToFile (filename, text) {
   str.dataUsingEncoding_(NSUTF8StringEncoding).writeToFile_atomically_(path, true);
 }
 
+function fileSaver() {
+  // Panel
+  var openPanel = [NSOpenPanel openPanel]
+
+  [openPanel setTitle: "Choose a location…"];
+  [openPanel setPrompt: "Export"];
+
+  [openPanel setCanCreateDirectories: true]
+  [openPanel setCanChooseFiles: false]
+  [openPanel setCanChooseDirectories: true]
+  [openPanel setAllowsMultipleSelection: false]
+  [openPanel setShowsHiddenFiles: false]
+  [openPanel setExtensionHidden: false]
+
+  var openPanelButtonPressed = [openPanel runModal]
+  if (openPanelButtonPressed == NSFileHandlingPanelOKButton) {
+    allowedUrl = [openPanel URL]
+  }
+  return allowedUrl
+}
+
+
+
+/**
+    Display a message about broken links  
+  */
+
+function displayMissingArtboardsWarnings (sketch, targets, artboards) {
+  var warnings = '';
+  targets.sort();
+  for (var i = 0; i < targets.length; i++) {
+    var target = targets[i];
+    if (artboards.indexOf(target) === -1) {
+      warnings += '\n ' + target
+    };
+  };
+
+  if (warnings !== '') {
+    warnings += '\n\nThe prototype will be exported anyway.';
+    sketch.alert(warnings, "Links to missing artboards:");
+  }
+}
+
+
+
+/**
+    Return list of artboards in the current page  
+  */
+function getArtboardsList (doc) {
+  var artboards = (doc.sketchObject).currentPage().artboards().objectEnumerator();
+
+  var artboardsList = [];
+
+  while (artboard = artboards.nextObject()) {
+    var artboardName = artboard.name();
+    artboardsList.push(artboardName);
+  }
+
+  return artboardsList;
+}
