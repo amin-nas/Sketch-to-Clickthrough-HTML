@@ -4,7 +4,7 @@ Convert your artboards into HTML pages.
 
 ##### Installation
 
-1. Download the plugin
+1. Download the plugin.
 2. Double click "Sketch to HTML.sketchplugin" to install it.
 
 
