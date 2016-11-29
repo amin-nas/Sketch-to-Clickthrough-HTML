@@ -3,13 +3,6 @@
   "commands" : [
     {
       "script" : "script.cocoascript",
-      "name" : "Export to HTML",
-      "handlers" : {
-        "run" : "exportToHtml"
-      },
-      "identifier" : "exportToHtml"
-    },{
-      "script" : "script.cocoascript",
       "name" : "Link selected layer to...",
       "handlers" : {
         "run" : "setLinkedLayer"
@@ -22,15 +15,22 @@
         "run" : "setFixedLayer"
       },
       "identifier" : "setFixedLayer"
+    },{
+      "script" : "script.cocoascript",
+      "name" : "Export to HTML",
+      "handlers" : {
+        "run" : "exportToHtml"
+      },
+      "identifier" : "exportToHtml"
     }
   ],
   "menu" : {
     "items" : [
-      "exportToHtml",
       "setLinkedLayer",
-      "setFixedLayer"
+      "setFixedLayer",
+      "exportToHtml"
     ],
-    "title" : "Export to HTML"
+    "title" : "<HTML />"
   },
   "version" : "1.1",
   "description" : "Sketch plugin to create clickthrou HTML",
