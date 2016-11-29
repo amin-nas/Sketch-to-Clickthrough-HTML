@@ -81,7 +81,8 @@ var exportToHtml = function(context) {
 
   // display a toaster message
   sketch.message('HTML files exported to: ' + exportPath);
-
+  
+  openFolder(exportPath);
 }
 
 
