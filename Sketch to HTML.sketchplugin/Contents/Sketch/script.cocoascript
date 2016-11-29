@@ -19,7 +19,7 @@ var exportToHtml = function(context) {
 
   // open the system dialog to choose the export location
   const fileURL = fileSaver();
-  const exportPath = fileURL.path() + '/' + docName + '_prototype/';
+  const exportPath = fileURL.path() + '/' + docName + '_HTML/';
   createFolder(exportPath);
 
   var html = '';
@@ -129,7 +129,7 @@ var setLinkedLayer = function(context) {
 
 /**
     COMMAND
-    Link selected layer to...  
+    Fix selected layer to...  
   */
 
 var setFixedLayer = function(context) {
@@ -144,7 +144,7 @@ var setFixedLayer = function(context) {
   }
 
   // Get user input
-  var response = sketch.getSelectionFromUser('Select the artboard to link to:', fixedPositions, 0);
+  var response = sketch.getSelectionFromUser('Select the position to fix this layer to:', fixedPositions, 0);
 
   if (response[0] == 1000) {
     var i = response[1];
