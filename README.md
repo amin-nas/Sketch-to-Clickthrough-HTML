@@ -31,7 +31,7 @@ Once done with the set up, run the `Export to HTML`.
 ## What's next? ##
 - [ ] Remove limitation #1 - perhaps user selects which pages
 - [ ] Remove limitation #2 - Link or fix nested layers
-- [ ] Run the HTML page after export
+- [x] Open folder after export
 - [ ] Export for mobile apps - artboards embedded in a mobile frame, similar to Invision
  
 
