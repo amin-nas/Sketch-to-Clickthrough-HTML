@@ -103,6 +103,7 @@ function displayMissingArtboardsWarnings (sketch, targets, artboards) {
 /**
     Return list of artboards in the current page  
   */
+
 function getArtboardsList (doc) {
   var artboards = (doc.sketchObject).currentPage().artboards().objectEnumerator();
 
@@ -116,3 +117,12 @@ function getArtboardsList (doc) {
   return artboardsList;
 }
 
+
+/**
+    Open folder  
+  */
+
+function openFolder (path) {
+  var folderPath = [@"" stringByAppendingString:path];
+  [[NSWorkspace sharedWorkspace]openFile:folderPath withApplication:@"Finder"]
+}
