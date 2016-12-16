@@ -10,10 +10,20 @@ Convert your artboards into HTML pages.
 
 ## How it works ##
 
-First, specify how your artboards should link to one another. E.g. If clicking a button on artboard 1 should take user to artboard 2, select the button layer and run the `Link selected layer to...` command. Then select artboard 2 in the pop up that apprers. You can also fix layers to one of the four positions. If you got a fixed nav, this can be handy. 
+#### Link a layer to an artboard
 
-Once done with the set up, run the `Export to HTML`.
+![link layer](https://raw.githubusercontent.com/amin-nas/Sketch-to-Clickthrough-HTML/master/demo/1.gif)
 
+#### Fix layers
+You can also fix layers to one of the four positions. If you got a fixed nav, this can be handy. 
+![link layer](https://raw.githubusercontent.com/amin-nas/Sketch-to-Clickthrough-HTML/master/demo/2.gif)
+
+#### Export to HTML
+![link layer](https://raw.githubusercontent.com/amin-nas/Sketch-to-Clickthrough-HTML/master/demo/3.gif)
+
+
+
+## Full Command List ##
 
 | Command                     | Description |
 |:----------------------------|:----------------------------------------------------|
