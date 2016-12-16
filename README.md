@@ -1,3 +1,5 @@
+> Tested with Sketch version 41.2 (35397)
+
 # Sketch to Click-through HTML
 
 Convert your artboards into HTML pages.
