@@ -39,7 +39,9 @@ You can also fix layers to one of the four positions. If you got a fixed nav, th
 ## Limitations ##
 
 1. Only the artboards of the current page will be exported.
+
 ~~2. A layer you wish to link or fix has to be a top-level layer, meaning it cannot be nested inside another layer.~~
+
 3. Make sure each artboard in the page has a unique name.
 
 ## What's next? ##
