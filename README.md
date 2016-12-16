@@ -1,4 +1,4 @@
-# Sketch to Clickthrough HTML
+# Sketch to Click-through HTML
 
 Convert your artboards into HTML pages.
 
@@ -15,22 +15,24 @@ First, specify how your artboards should link to one another. E.g. If clicking a
 Once done with the set up, run the `Export to HTML`.
 
 
-| Command                   | Description |
-|:------------------------- |:----------------------------------------------------|
-| Link selected layer to... | Select the artboard you want this layer to link to. The layer will be prefixed with [linkto:artbaord] |
-| Fix selected layer to...  | Select the position this layer should be fixed to. The layer will be prefixed with [fixed:position] |
-| Export to HTML            | A folder will be created in the destination you selected, named after the Sketch file. |
-
+| Command                     | Description |
+|:----------------------------|:----------------------------------------------------|
+| Link selected layer to...   | Link a layer to an artboard in the current page |
+| Fix selected layer to...    | Fix a layer to one of the four positions: top, right, bottom, left  |
+| Export to HTML              | Export current page artboards into html files, in a folder named after the Sketch file |
+| Clear selected layer's HTML | Clear the HTML options set for the selected layer  |
+| Clear current page          | Clear all the HTML options set in the current page |
+| Show HTML config for selected artboard | Get an alert message listing HTML options set for current artboard |
 
 ## Limitations ##
 
 1. Only the artboards of the current page will be exported.
-2. A layer you wish to link or fix has to be a top-level layer, meaning it cannot be nested inside another layer.
+~~2. A layer you wish to link or fix has to be a top-level layer, meaning it cannot be nested inside another layer.~~
 3. Make sure each artboard in the page has a unique name.
 
 ## What's next? ##
 - [ ] Remove limitation #1 - perhaps user selects which pages
-- [ ] Remove limitation #2 - Link or fix nested layers
+- [x] ~~Remove limitation #2 - Link or fix nested layers~~
 - [x] ~~Open folder after export~~
 - [ ] Export for mobile apps - artboards embedded in a mobile frame, similar to Invision
  
