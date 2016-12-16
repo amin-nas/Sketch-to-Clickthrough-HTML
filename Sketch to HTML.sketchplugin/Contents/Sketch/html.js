@@ -1,39 +1,73 @@
 
-function getLinkedLayerHtml (layer, linkTarget) {
+function getLinkedLayerHtml (layer, linkTarget, position) {
+  var lx = layer.frame().x()
+  var ly = layer.frame().y()
+  var lw = layer.frame().width()
+  var lh = layer.frame().height()
+
+  var html = ''
 
   if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
-    linkTarget += '.html';
+    linkTarget += '.html'
   } else {
-    linkTarget = '';
+    linkTarget = ''
   }
 
-  if (typeof layer.frame === 'function') {
-    var lx = layer.frame().x();
-    var ly = layer.frame().y();
-    var lw = layer.frame().width();
-    var lh = layer.frame().height();
-    var html= '<a href="' + linkTarget + '" style="left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n';
-  }
-  return html;
+  // if (position)
+  html= '<a href="' + linkTarget + '" class="'+ position +'" style="z-index: 4; left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n'
+
+  return html
 }
 
 function getFixedLayerHtml(layer, position) {
+  var layerId = layer.objectID()
+  var lx = layer.frame().x()
+  var ly = layer.frame().y()
+  var lw = layer.frame().width()
+  var lh = layer.frame().height()
 
-  var layerId = layer.objectID();
-  var lw = layer.frame().width();
+  var html = ''
+  var inlineStyle = ''
 
   if (position == "left" || position == "right") {
-    if (typeof layer.frame === 'function') {
-      var ly = layer.frame().y();
-    }
-    html = '<img class="'+ position +'" style="top: ' + ly + 'px; width: ' + lw + 'px;" src="img/' + layerId + '.png">\n';
+    inlineStyle = 'style="top: ' + ly + 'px;"'
   } else {
-    if (typeof layer.frame === 'function') {
-      var lx = layer.frame().x();
-    }
-    html = '<img class="'+ position +'" style="left: ' + lx + 'px; width: ' + lw + 'px;" src="img/' + layerId + '.png">\n';
+    inlineStyle = 'style="left: ' + lx + 'px;"'
   }
-  return html;
+
+  html = '<div id="'+ layerId + '" class="'+ position +'"' + inlineStyle + '">\n\
+            <img src="img/' + layerId + '.png" style="width: ' + lw + 'px;"> \n\
+          </div>'
+
+  return html
+}
+
+function getFixedAndLinkedLayerHtml (layer, linkTarget, position) {
+  if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
+    linkTarget += '.html'
+  } else {
+    linkTarget = ''
+  }
+
+  var layerId = layer.objectID()
+  var lx = layer.frame().x()
+  var ly = layer.frame().y()
+  var lw = layer.frame().width()
+  var lh = layer.frame().height()
+
+  var inlineStyle = ''
+
+  if (position == "left" || position == "right") {
+    inlineStyle = 'style="top: ' + ly + 'px;"'
+  } else {
+    inlineStyle = 'style="left: ' + lx + 'px;"'
+  }
+
+  html = '<a id="'+ layerId + '" href="' + linkTarget + '" class="'+ position +'"' + inlineStyle + '">\n\
+            <img src="img/' + layerId + '.png" style="width: ' + lw + 'px;"> \n\
+          </a>'
+
+  return html
 }
 
 const HTML_HEAD = '<!DOCTYPE html>\n\
@@ -56,7 +90,7 @@ const HTML_HEAD = '<!DOCTYPE html>\n\
         margin: 0; \n\
       } \n\
       a { \n\
-        position: absolute; \n\
+        position: fixed; \n\
         z-index: 10; \n\
       } \n\
       body.is-highlighted a { \n\
@@ -65,7 +99,7 @@ const HTML_HEAD = '<!DOCTYPE html>\n\
       } \n\
       main { \n\
         position: relative; \n\
-        display: inline-block; \n\
+        margin: 0 auto; \n\
       } \n\
       .top { \n\
         position: fixed; \n\
@@ -91,6 +125,7 @@ const HTML_HEAD = '<!DOCTYPE html>\n\
       } \n\
     </style> \n\
   </head>\n\
-  <body><main>\n';
+  <body><main>\n'
 
-const HTML_FOOT = '</main></body></html>\n';
+const HTML_FOOT = '</main></body></html>\n'
+

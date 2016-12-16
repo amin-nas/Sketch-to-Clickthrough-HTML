@@ -1,9 +1,11 @@
 @import "library.js"
 @import "html.js"
 
-const linkLayerPrefix  = "[linkto:";
-const fixedLayerPrefix = "[fixed:";
-const fixedPositions   = ['top', 'right', 'bottom', 'left'];
+const linkedLayerKey = "link"
+const fixedLayerKey  = "fix"
+const fixedPositions = ['top', 'right', 'bottom', 'left']
+
+const htmlConfigName = "HTML_Config"
 
 
 /**
@@ -13,59 +15,87 @@ const fixedPositions   = ['top', 'right', 'bottom', 'left'];
 
 var exportToHtml = function(context) {
   
-  const sketch = context.api();
-  const doc = sketch.selectedDocument;
-  const docName = [(doc.sketchObject) displayName];
+  const sketch = context.api()
+  const doc = sketch.selectedDocument
+  const docName = [(doc.sketchObject) displayName]
+  const page = doc.selectedPage
 
   // open the system dialog to choose the export location
   const fileURL = fileSaver();
-  const exportPath = fileURL.path() + '/' + docName + '_HTML/';
+  const exportPath = fileURL.path() + '/' + docName + '_HTML/'
   createFolder(exportPath);
 
-  var html = '';
-  var linkTargets = [];
-  var artboardsList = getArtboardsList (doc);
+  var html = ''
+  var linkTargets = []
+  var hiddenLayers = []
+  var artboardsList = getArtboardsList (doc)
 
-  var artboards = (doc.sketchObject).currentPage().artboards().objectEnumerator();
+  var artboards = (doc.sketchObject).currentPage().artboards().objectEnumerator()
 
   while (artboard = artboards.nextObject()) {
 
-    var artboardName = artboard.name().trim();
-    var artboardW = artboard.frame().width();
+    var artboardName = artboard.name().trim()
+    var artboardId = artboard.objectID()
+    var artboardW = artboard.frame().width()
 
     // start the HTML string
-    html = HTML_HEAD + '<!-- ' + artboardName + ' -->\n';
-    html += '<img class="artboardImage" src="img/' + artboardName + '.png" width="'+ artboardW +'">\n';
+    html = HTML_HEAD + '<!-- ' + artboardName + ' -->\n'
+    html += '<img class="artboardImage" src="img/' + artboardName + '.png" width="'+ artboardW +'">\n'
 
-    // check for fixed or linked layers
-    var layers = artboard.children().objectEnumerator();
+    let config = getConfigObject (sketch, page)
+    let artboardConfig = config[artboardId]
+    if (artboardConfig) {
+      let layersIds = Object.keys(artboardConfig)
 
-    while (layer = layers.nextObject()) {
+      for (let layerId of layersIds) {
+        let layer = doc.layerWithID(layerId)
+        if (!layer) break
+        let layerObj = layer.sketchObject
+        
+        let layerConfig = artboardConfig[layerId]
 
-      var name = layer.name();
-      var layerId = layer.objectID();
+        if ( Object.keys(layerConfig).length > 1 ) { // layer if both fixed and linked
+          
+          let linkTarget = layerConfig[linkedLayerKey]
+          let position = layerConfig[fixedLayerKey]
 
-      if (name === linkLayerPrefix || name.indexOf(linkLayerPrefix) !== -1) {
+          html += getFixedAndLinkedLayerHtml(layerObj, linkTarget, position)
+          let filePath = exportPath + "img/" + layerId + ".png"
+          exportLayerToPath((doc.sketchObject), layerObj, filePath)
+          //hide layer until the artboard is exported
+          [layerObj setIsVisible:false]
+          hiddenLayers.push(layerObj)
 
-        var linkTarget = name.substring(name.lastIndexOf(linkLayerPrefix)+8,name.lastIndexOf("]"))
-        linkTargets.push(linkTarget);
-        html += getLinkedLayerHtml(layer, linkTarget);
+        } else {
+          for (let htmlType of Object.keys(layerConfig)) {
 
-      } else if (name === fixedLayerPrefix || name.indexOf(fixedLayerPrefix) !== -1) {
-        var position = name.substring(name.lastIndexOf(fixedLayerPrefix)+7,name.lastIndexOf("]"))
+            let htmlValue = layerConfig[htmlType]
 
-        var filePath = exportPath + "img/" + layerId + ".png"
-        exportLayerToPath((doc.sketchObject), layer, filePath);
-        html += getFixedLayerHtml(layer, position);
+            switch(htmlType) {
 
-        //hide layer until the artboard is exported
-        [layer setIsVisible:false];
+              case linkedLayerKey:
+                linkTargets.push(htmlValue)
+                let position = getPosition(layer, artboardConfig)
+                html += getLinkedLayerHtml(layerObj, htmlValue, position)
+                break
+
+              case fixedLayerKey:
+                html += getFixedLayerHtml(layerObj, htmlValue)
+                let filePath = exportPath + "img/" + layerId + ".png"
+                exportLayerToPath((doc.sketchObject), layerObj, filePath)
+                //hide layer until the artboard is exported
+                [layerObj setIsVisible:false]
+                hiddenLayers.push(layerObj)
+                break
+            }
+          }
+        }
       }
     }
 
     html += HTML_FOOT;
 
-    var htmlPath = exportPath + artboardName + '.html';
+    var htmlPath = exportPath + artboardName + '.html'
     saveTextToFile(htmlPath, html);
 
     // export this artboard
@@ -73,17 +103,22 @@ var exportToHtml = function(context) {
     exportLayerToPath((doc.sketchObject), artboard, filePath)
 
     // show fixed layers
-    showFixedLayers (artboard)
+    for (var i = 0; i < hiddenLayers.length; i++) {
+      [(hiddenLayers[i]) setIsVisible:true]
+    }
+    hiddenLayers = []
+    
   }
 
   // display list of dead links, if any
   displayMissingArtboardsWarnings(sketch, linkTargets, artboardsList);
 
   // display a toaster message
-  sketch.message('HTML files exported to: ' + exportPath);
-  
+  sketch.message('HTML files exported to: ' + exportPath)
+
   openFolder(exportPath);
 }
+
 
 
 /**
@@ -92,38 +127,36 @@ var exportToHtml = function(context) {
   */
 
 var setLinkedLayer = function(context) {
-  const sketch = context.api();
-  const doc = sketch.selectedDocument;
+  const sketch = context.api()
+  const doc = sketch.selectedDocument
+  const page = doc.selectedPage
 
-  var selection = doc.selectedLayers;
+  var selection = doc.selectedLayers
+
+  var config = getConfigObject(sketch, page)
 
   if (selection.isEmpty) {
-    sketch.message('Select a layer first');
-    return false;
+    sketch.message('Select a layer first')
+    return false
   }
 
-  var artboardsList = getArtboardsList (doc);
+  var artboardsList = getArtboardsList (doc)
 
   // Get user input
-  var response = sketch.getSelectionFromUser('Select the artboard to link to:', artboardsList, 0);
+  var response = sketch.getSelectionFromUser('Select the artboard to link to:', artboardsList, 0)
 
   if (response[0] == 1000) {
-    var i = response[1];
-    var selectedArtboard = artboardsList[i];
-    selection.iterate(function(item) { 
-      var currentName = item.name;
+    var i = response[1]
+    var selectedArtboard = artboardsList[i]
+    selection.iterate(function(item) {
+      var itemId = item.id
+      var itemArtboardId = getParentArtboardId (item.sketchObject)
+      if (!config[itemArtboardId]) { config[itemArtboardId] = {} }
+      if (!config[itemArtboardId][itemId]) { config[itemArtboardId][itemId] = {} }
+      config[itemArtboardId][itemId][linkedLayerKey] = selectedArtboard
+    })
 
-      // already linked?
-      if (currentName === linkLayerPrefix || currentName.indexOf(linkLayerPrefix) !== -1) {
-        var linkTarget = currentName.substring(currentName.lastIndexOf("linkto:")+7,currentName.lastIndexOf("]"));
-        var newName = currentName.replace(linkTarget, selectedArtboard);
-      } else {
-        var newName = '[linkto:' + selectedArtboard + '] '+ currentName;
-      }
-
-      item.sketchObject.setName(newName);
-
-    });
+    setConfig (page, config)
   }
 }
 
@@ -134,37 +167,133 @@ var setLinkedLayer = function(context) {
   */
 
 var setFixedLayer = function(context) {
-  const sketch = context.api();
-  const doc = sketch.selectedDocument;
+  const sketch = context.api()
+  const doc = sketch.selectedDocument
+  const page = doc.selectedPage
 
-  var selection = doc.selectedLayers;
+  var selection = doc.selectedLayers
+
+  var config = getConfigObject(sketch, page)
 
   if (selection.isEmpty) {
-    sketch.message('Select a layer first');
-    return false;
+    sketch.message('Select a layer first')
+    return false
   }
 
   // Get user input
-  var response = sketch.getSelectionFromUser('Select the position to fix this layer to:', fixedPositions, 0);
+  var response = sketch.getSelectionFromUser('Select the position to fix this layer to:', fixedPositions, 0)
 
   if (response[0] == 1000) {
-    var i = response[1];
-    var position = fixedPositions[i];
+    var i = response[1]
+    var position = fixedPositions[i]
+
     selection.iterate(function(item) { 
-      var currentName = item.name;
+      var itemId = item.id
+      var itemArtboardId = getParentArtboardId (item.sketchObject)
+      if (!config[itemArtboardId]) { config[itemArtboardId] = {} }
+      if (!config[itemArtboardId][itemId]) { config[itemArtboardId][itemId] = {} }
+      config[itemArtboardId][itemId][fixedLayerKey] = position
+    })
 
-      // already fixed?
-      if (currentName === fixedLayerPrefix || currentName.indexOf(fixedLayerPrefix) !== -1) {
-        var fixedPosition = currentName.substring(currentName.lastIndexOf(fixedLayerPrefix)+8,currentName.lastIndexOf("]"));
-        var newName = currentName.replace(fixedPosition, position);
-      } else {
-        var newName = fixedLayerPrefix + position + '] '+ currentName;
-      }
-
-      item.sketchObject.setName(newName);
-
-    });
+    setConfig (page, config)
   }
-
 }
 
+
+
+/**
+    COMMAND
+    Clear selected layer's HTML
+  */
+
+var clearLayer = function(context) {
+  const sketch = context.api()
+  const doc = sketch.selectedDocument
+  const page = doc.selectedPage
+
+  var selection = doc.selectedLayers
+
+  var config = getConfigObject(sketch, page)
+
+  if (selection.isEmpty) {
+    sketch.message('Select a layer first')
+    return false
+  }
+
+  selection.iterate(function(item) {
+    var itemId = item.id
+    var itemArtboardId = getParentArtboardId (item.sketchObject)
+    if (!config[itemArtboardId]) return false
+    if (!config[itemArtboardId][itemId]) {
+      return false
+    } else {
+      delete config[itemArtboardId][itemId]
+      sketch.message('The HTML configuration was removed')
+    }
+
+  })
+
+  setConfig (page, config)
+}
+
+
+
+/**
+    COMMAND
+    Clear current page
+  */
+
+var clearPage = function(context) {
+  const sketch = context.api()
+  const doc = sketch.selectedDocument
+  const page = doc.selectedPage
+
+  removeConfigText (sketch, page)
+}
+
+
+/**
+    COMMAND
+    Show HTML configuration
+  */
+
+var showHtmlConfigs = function(context) {
+  const sketch = context.api()
+  const doc = sketch.selectedDocument
+  const page = doc.selectedPage
+  var selection = doc.selectedLayers
+
+  var itemArtboardId
+  var config = getConfigObject(sketch, page)
+
+  if (selection.isEmpty) {
+    sketch.message('Select a layer or artboard first')
+    return false
+  }
+
+  selection.iterate(function(item) {
+    itemArtboardId = getParentArtboardId(item.sketchObject)
+  })
+
+  var output = ''
+
+  let artboardConfig = config[itemArtboardId]
+  if (artboardConfig) {
+    let layersIds = Object.keys(artboardConfig)
+
+    for (let layerId of layersIds) {
+      let layer = doc.layerWithID(layerId)
+      if (!layer) break
+      output += layer.name + '\n'
+
+      let layerConfig = artboardConfig[layerId]
+
+      output += JSON.stringify(layerConfig) + '\n\n'
+    }
+  }
+
+  if (output.length == 0) output = "Nothing set for this artboard"
+
+  sketch.alert(output, "HTML Configurations")
+  
+}

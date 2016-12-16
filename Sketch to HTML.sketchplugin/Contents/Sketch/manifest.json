@@ -22,18 +22,44 @@
         "run" : "exportToHtml"
       },
       "identifier" : "exportToHtml"
+    },{
+      "script" : "script.cocoascript",
+      "name" : "Clear selected layer's HTML",
+      "handlers" : {
+        "run" : "clearLayer"
+      },
+      "identifier" : "clearLayer"
+    },{
+      "script" : "script.cocoascript",
+      "name" : "Clear current page",
+      "handlers" : {
+        "run" : "clearPage"
+      },
+      "identifier" : "clearPage"
+    },{
+      "script" : "script.cocoascript",
+      "name" : "Show HTML config for selected artboard",
+      "handlers" : {
+        "run" : "showHtmlConfigs"
+      },
+      "identifier" : "showHtmlConfigs"
     }
   ],
   "menu" : {
     "items" : [
       "setLinkedLayer",
       "setFixedLayer",
-      "exportToHtml"
+      "exportToHtml",
+      "-",
+      "clearLayer",
+      "clearPage",
+      "-",
+      "showHtmlConfigs"
     ],
     "title" : "<HTML />"
   },
-  "version" : "1.1",
-  "description" : "Sketch plugin to create clickthrou HTML",
+  "version" : "1.2",
+  "description" : "Sketch plugin to create click-through HTML",
   "authorEmail" : "amin.nas@me.com",
-  "name" : "Sketch to Clickthrough HTML"
+  "name" : "Sketch to Click-through HTML"
 }

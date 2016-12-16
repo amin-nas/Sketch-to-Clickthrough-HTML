@@ -21,23 +21,6 @@ function exportLayerToPath(doc, layer, path) {
 
 
 /**
-    Show fixed layers
-    Used after an artboard is exported
-  */
-
-function showFixedLayers (artboard) {
-  var layers = artboard.children().objectEnumerator();
-  while (layer = layers.nextObject()) {
-    var name = layer.name();
-    if (name == fixedLayerPrefix || name.indexOf(fixedLayerPrefix) != -1) {
-      [layer setIsVisible:true];
-    }
-  }
-}
-
-
-
-/**
     Export html files
   */
 
@@ -102,6 +85,7 @@ function displayMissingArtboardsWarnings (sketch, targets, artboards) {
 
 /**
     Return list of artboards in the current page  
+    Return false if layer is not nested within an artboard
   */
 
 function getArtboardsList (doc) {
@@ -125,4 +109,108 @@ function getArtboardsList (doc) {
 function openFolder (path) {
   var folderPath = [@"" stringByAppendingString:path];
   [[NSWorkspace sharedWorkspace]openFile:folderPath withApplication:@"Finder"]
+}
+
+
+/**
+    Get the artboard ID of a selected layer  
+  */
+
+function getParentArtboardId (object) {
+  if (object.isKindOfClass(MSArtboardGroup)) {
+    return (object.objectID())
+  } else if (object.parentGroup() != null) {
+    return getParentArtboardId(object.parentGroup())
+  } else {
+    return null
+  }
+}
+
+
+
+/**
+    If any parent layer is fixed, the layer has to be fixed too  
+  */
+
+function getPosition (layer, artboardConfig) {
+  
+  var object = layer.sketchObject
+  
+  while(!(object.isKindOfClass(MSArtboardGroup))) {
+    var objId = object.objectID()
+    if(artboardConfig[objId]['fix']) {
+      return artboardConfig[objId]['fix']
+    } else {
+      object = object.parentGroup()
+    }
+  }
+
+  return false
+}
+
+
+
+/**
+  Set the new config text   
+  */
+
+function setConfig (page, config) {
+
+  var configStr = JSON.stringify(config)
+
+  page.iterate(function(item) { 
+    if (item.name == htmlConfigName) { 
+      item.iterate(function(layer) {
+        layer.text = configStr
+      });
+    }
+  });
+}
+
+
+
+/**
+  Return config object if it exists
+  Create a new layer if it doesn't    
+  */
+
+function getConfigObject (sketch, page) {
+  var config = {}
+  var configStr
+  var configExists = false
+
+  page.iterate(function(item) { 
+    if (item.name == htmlConfigName) { 
+      configExists = true
+      item.iterate(function(layer) {
+        configStr = layer.text
+      });
+    }
+  });
+
+  if (configExists) {
+    config = JSON.parse(configStr)
+  } else {     
+    var groupLayer = page.newGroup({frame: new sketch.Rectangle(-10000, -10000, 100, 100), name: htmlConfigName})
+    var textLayer = groupLayer.newText({text:"{}", name: htmlConfigName})
+    groupLayer.moveToBack()
+  }
+
+  return config
+}
+
+
+/**
+  Remove config text    
+  */
+
+function removeConfigText (sketch, page) {
+  var config = {}
+  var configStr
+
+  page.iterate(function(item) { 
+    if (item.name == htmlConfigName) { 
+      item.remove()
+    }
+  });
 }
