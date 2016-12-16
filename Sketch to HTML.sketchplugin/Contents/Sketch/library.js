@@ -194,6 +194,7 @@ function getConfigObject (sketch, page) {
     var groupLayer = page.newGroup({frame: new sketch.Rectangle(-10000, -10000, 100, 100), name: htmlConfigName})
     var textLayer = groupLayer.newText({text:"{}", name: htmlConfigName})
     groupLayer.moveToBack()
+    groupLayer.deselect()
   }
 
   return config
