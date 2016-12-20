@@ -46,7 +46,6 @@ You can also fix layers to one of the four positions. If you got a fixed nav, th
 - [ ] Remove limitation #1 - perhaps user selects which pages
 - [x] ~~Remove limitation #2 - Link or fix nested layers~~
 - [x] ~~Open folder after export~~
-- [ ] Export for mobile apps - artboards embedded in a mobile frame, similar to Invision
  
 
 ## Feedback & pull requests ##
