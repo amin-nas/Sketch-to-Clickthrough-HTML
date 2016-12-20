@@ -42,46 +42,46 @@ var exportToHtml = function(context) {
     html = HTML_HEAD + '<!-- ' + artboardName + ' -->\n'
     html += '<img class="artboardImage" src="img/' + artboardName + '.png" width="'+ artboardW +'">\n'
 
-    let config = getConfigObject (sketch, page)
-    let artboardConfig = config[artboardId]
+    var config = getConfigObject (sketch, page)
+    var artboardConfig = config[artboardId]
     if (artboardConfig) {
-      let layersIds = Object.keys(artboardConfig)
+      var layersIds = Object.keys(artboardConfig)
 
-      for (let layerId of layersIds) {
-        let layer = doc.layerWithID(layerId)
+      for (var layerId of layersIds) {
+        var layer = doc.layerWithID(layerId)
         if (!layer) break
-        let layerObj = layer.sketchObject
+        var layerObj = layer.sketchObject
         
-        let layerConfig = artboardConfig[layerId]
+        var layerConfig = artboardConfig[layerId]
 
         if ( Object.keys(layerConfig).length > 1 ) { // layer if both fixed and linked
           
-          let linkTarget = layerConfig[linkedLayerKey]
-          let position = layerConfig[fixedLayerKey]
+          var linkTarget = layerConfig[linkedLayerKey]
+          var position = layerConfig[fixedLayerKey]
 
           html += getFixedAndLinkedLayerHtml(layerObj, linkTarget, position)
-          let filePath = exportPath + "img/" + layerId + ".png"
+          var filePath = exportPath + "img/" + layerId + ".png"
           exportLayerToPath((doc.sketchObject), layerObj, filePath)
           //hide layer until the artboard is exported
           [layerObj setIsVisible:false]
           hiddenLayers.push(layerObj)
 
         } else {
-          for (let htmlType of Object.keys(layerConfig)) {
+          for (var htmlType of Object.keys(layerConfig)) {
 
-            let htmlValue = layerConfig[htmlType]
+            var htmlValue = layerConfig[htmlType]
 
             switch(htmlType) {
 
               case linkedLayerKey:
                 linkTargets.push(htmlValue)
-                let position = getPosition(layer, artboardConfig)
+                var position = getPosition(layer, artboardConfig)
                 html += getLinkedLayerHtml(layerObj, htmlValue, position)
                 break
 
               case fixedLayerKey:
                 html += getFixedLayerHtml(layerObj, htmlValue)
-                let filePath = exportPath + "img/" + layerId + ".png"
+                var filePath = exportPath + "img/" + layerId + ".png"
                 exportLayerToPath((doc.sketchObject), layerObj, filePath)
                 //hide layer until the artboard is exported
                 [layerObj setIsVisible:false]
@@ -277,16 +277,16 @@ var showHtmlConfigs = function(context) {
 
   var output = ''
 
-  let artboardConfig = config[itemArtboardId]
+  var artboardConfig = config[itemArtboardId]
   if (artboardConfig) {
-    let layersIds = Object.keys(artboardConfig)
+    var layersIds = Object.keys(artboardConfig)
 
-    for (let layerId of layersIds) {
-      let layer = doc.layerWithID(layerId)
+    for (var layerId of layersIds) {
+      var layer = doc.layerWithID(layerId)
       if (!layer) break
       output += layer.name + '\n'
 
-      let layerConfig = artboardConfig[layerId]
+      var layerConfig = artboardConfig[layerId]
 
       output += JSON.stringify(layerConfig) + '\n\n'
     }
