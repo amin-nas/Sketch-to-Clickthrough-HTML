@@ -1,4 +1,4 @@
-> Tested with Sketch version 41.2 (35397)
+> Tested with Sketch version 42
 
 # Sketch to Click-through HTML
 
