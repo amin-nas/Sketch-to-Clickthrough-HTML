@@ -59,7 +59,7 @@ var exportToHtml = function(context) {
           var linkTarget = layerConfig[linkedLayerKey]
           var position = layerConfig[fixedLayerKey]
 
-          html += getFixedAndLinkedLayerHtml(layerObj, linkTarget, position)
+          html += getFixedAndLinkedLayerHtml(layer, linkTarget, position)
           var filePath = exportPath + "img/" + layerId + ".png"
           exportLayerToPath((doc.sketchObject), layerObj, filePath)
           //hide layer until the artboard is exported
@@ -76,11 +76,11 @@ var exportToHtml = function(context) {
               case linkedLayerKey:
                 linkTargets.push(htmlValue)
                 var position = getPosition(layer, artboardConfig)
-                html += getLinkedLayerHtml(layerObj, htmlValue, position)
+                html += getLinkedLayerHtml(layer, htmlValue, position)
                 break
 
               case fixedLayerKey:
-                html += getFixedLayerHtml(layerObj, htmlValue)
+                html += getFixedLayerHtml(layer, htmlValue)
                 var filePath = exportPath + "img/" + layerId + ".png"
                 exportLayerToPath((doc.sketchObject), layerObj, filePath)
                 //hide layer until the artboard is exported

@@ -1,9 +1,42 @@
+  
+function addParentX (x, layer) {
+  var newX = x + layer.frame.x
+  if (!(layer.container.isArtboard)) {
+      newX = addParentX(newX, layer.container)
+  }
+  return newX
+}
+
+function addParentY (y, layer) {
+  var newY = y + layer.frame.y
+  if (!(layer.container.isArtboard)) {
+      newY = addParentY(newY, layer.container)
+  }
+  return newY
+}
+
+function getRelativeX (layer) {
+  var x = 0
+  x = layer.frame.x
+  if (!(layer.container.isArtboard)) x = addParentX(x, layer.container)
+  return x
+}
+
+  
+function getRelativeY (layer) {
+  var y = 0
+  y = layer.frame.y
+  if (!(layer.container.isArtboard)) y = addParentY(y, layer.container)
+  return y
+}
+
+  
 
 function getLinkedLayerHtml (layer, linkTarget, position) {
-  var lx = layer.frame().x()
-  var ly = layer.frame().y()
-  var lw = layer.frame().width()
-  var lh = layer.frame().height()
+  var lx = getRelativeX(layer) 
+  var ly = getRelativeY(layer)
+  var lw = layer.frame.width
+  var lh = layer.frame.height
 
   var html = ''
 
@@ -20,11 +53,11 @@ function getLinkedLayerHtml (layer, linkTarget, position) {
 }
 
 function getFixedLayerHtml(layer, position) {
-  var layerId = layer.objectID()
-  var lx = layer.frame().x()
-  var ly = layer.frame().y()
-  var lw = layer.frame().width()
-  var lh = layer.frame().height()
+  var layerId = layer.sketchObject.objectID()
+  var lx = getRelativeX(layer) 
+  var ly = getRelativeY(layer)
+  var lw = layer.frame.width
+  var lh = layer.frame.height
 
   var html = ''
   var inlineStyle = ''
@@ -49,11 +82,11 @@ function getFixedAndLinkedLayerHtml (layer, linkTarget, position) {
     linkTarget = ''
   }
 
-  var layerId = layer.objectID()
-  var lx = layer.frame().x()
-  var ly = layer.frame().y()
-  var lw = layer.frame().width()
-  var lh = layer.frame().height()
+  var layerId = layer.sketchObject.objectID()
+  var lx = getRelativeX(layer) 
+  var ly = getRelativeY(layer)
+  var lw = layer.frame.width
+  var lh = layer.frame.height
 
   var inlineStyle = ''
 
