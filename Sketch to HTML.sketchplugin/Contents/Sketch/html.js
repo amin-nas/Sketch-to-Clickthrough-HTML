@@ -46,8 +46,11 @@ function getLinkedLayerHtml (layer, linkTarget, position) {
     linkTarget = ''
   }
 
-  // if (position)
-  html= '<a href="' + linkTarget + '" class="'+ position +'" style="z-index: 4; left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n'
+  if (position) {
+    html= '<a href="' + linkTarget + '" class="'+ position +'" style="z-index: 8; left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n'
+  } else {
+    html= '<a href="' + linkTarget + '" style="z-index: 4; left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n'
+  }
 
   return html
 }
@@ -91,9 +94,9 @@ function getFixedAndLinkedLayerHtml (layer, linkTarget, position) {
   var inlineStyle = ''
 
   if (position == "left" || position == "right") {
-    inlineStyle = 'style="top: ' + ly + 'px;"'
+    inlineStyle = 'style="top: ' + ly + 'px; z-index: 8; "'
   } else {
-    inlineStyle = 'style="left: ' + lx + 'px;"'
+    inlineStyle = 'style="left: ' + lx + 'px; z-index: 8; "'
   }
 
   html = '<a id="'+ layerId + '" href="' + linkTarget + '" class="'+ position +'"' + inlineStyle + '">\n\
@@ -124,7 +127,6 @@ const HTML_HEAD = '<!DOCTYPE html>\n\
       } \n\
       a { \n\
         position: absolute; \n\
-        z-index: 10; \n\
       } \n\
       body.is-highlighted a { \n\
         background-color: #e5e5e5; \n\
@@ -136,23 +138,23 @@ const HTML_HEAD = '<!DOCTYPE html>\n\
       } \n\
       .top { \n\
         position: fixed; \n\
-        z-index: 2; \n\
+        z-index: 6; \n\
         top: 0; \n\
       } \n\
       .left { \n\
         position: fixed; \n\
-        z-index: 2; \n\
+        z-index: 6; \n\
         top: 0; \n\
         left: 0; \n\
       } \n\
       .bottom { \n\
         position: fixed; \n\
-        z-index: 2; \n\
+        z-index: 6; \n\
         bottom: 0; \n\
       } \n\
       .right { \n\
         position: fixed; \n\
-        z-index: 2; \n\
+        z-index: 6; \n\
         top: 0; \n\
         right: 0; \n\
       } \n\
