@@ -90,7 +90,7 @@ const HTML_HEAD = '<!DOCTYPE html>\n\
         margin: 0; \n\
       } \n\
       a { \n\
-        position: fixed; \n\
+        position: absolute; \n\
         z-index: 10; \n\
       } \n\
       body.is-highlighted a { \n\

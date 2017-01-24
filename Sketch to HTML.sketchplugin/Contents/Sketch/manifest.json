@@ -58,8 +58,8 @@
     ],
     "title" : "<HTML />"
   },
-  "version" : "1.2.1",
+  "version" : "1.2.2",
   "description" : "Sketch plugin to create click-through HTML",
-  "authorEmail" : "amin.nas@me.com",
+  "authorEmail" : "amin.nas@gmail.com",
   "name" : "Sketch to Click-through HTML"
 }

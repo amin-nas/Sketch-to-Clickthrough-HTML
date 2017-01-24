@@ -66,8 +66,6 @@ function fileSaver() {
 function displayMissingArtboardsWarnings (sketch, targets, artboards) {
   var warnings = '';
   targets.sort();
-  log(artboards);
-  log(targets);
   for (var i = 0; i < targets.length; i++) {
     var target = targets[i];
     if (artboards.indexOf(target) === -1) {
@@ -137,8 +135,8 @@ function getPosition (layer, artboardConfig) {
   var object = layer.sketchObject
   
   while(!(object.isKindOfClass(MSArtboardGroup))) {
-    var objId = object.objectID()
-    if(artboardConfig[objId]['fix']) {
+    var objId = object.objectID();
+    if(artboardConfig[objId] && 'fix' in artboardConfig[objId]) {
       return artboardConfig[objId]['fix']
     } else {
       object = object.parentGroup()

@@ -53,7 +53,7 @@ var exportToHtml = function(context) {
         var layerObj = layer.sketchObject
         
         var layerConfig = artboardConfig[layerId]
-
+        if (!layerConfig) break
         if ( Object.keys(layerConfig).length > 1 ) { // layer if both fixed and linked
           
           var linkTarget = layerConfig[linkedLayerKey]
