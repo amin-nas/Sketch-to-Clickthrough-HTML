@@ -65,10 +65,19 @@ function getFixedLayerHtml(layer, position) {
   var html = ''
   var inlineStyle = ''
 
-  if (position == "left" || position == "right") {
-    inlineStyle = 'style="top: ' + ly + 'px;"'
-  } else {
-    inlineStyle = 'style="left: ' + lx + 'px;"'
+  switch (position) {
+    case "top":
+      inlineStyle = 'style="left: ' + lx + 'px;top: ' + ly + 'px;"'
+      break;
+    case "bottom":
+      inlineStyle = 'style="left: ' + lx + 'px;bottom: ' + ly + 'px;"'
+      break;
+    case "left":
+      inlineStyle = 'style="left: ' + lx + 'px;top: ' + ly + 'px;"'
+      break;
+    case "right":
+      inlineStyle = 'style="right: ' + lx + 'px;top: ' + ly + 'px;"'
+      break;
   }
 
   html = '<div id="'+ layerId + '" class="'+ position +'"' + inlineStyle + '">\n\
