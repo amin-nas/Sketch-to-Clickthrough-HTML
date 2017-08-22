@@ -1,0 +1,24 @@
+{
+  "compatibleVersion": 3,
+  "bundleVersion": 1,
+  "commands": [
+    {
+      "name": "my-command",
+      "identifier": "my-command-identifier",
+      "script": "my-command.js"
+    }
+  ],
+  "menu": {
+    "title": "sketch-to-clickthrough-html",
+    "items": [
+      "my-command-identifier"
+    ]
+  },
+  "version": "1.3.0",
+  "description": "Sketch plugin to create click-through HTML",
+  "homepage": "https://github.com/amin-nas/Sketch-to-Clickthrough-HTML#readme",
+  "name": "sketch-to-clickthrough-html",
+  "disableCocoaScriptPreprocessor": true,
+  "appcast": "https://raw.githubusercontent.com/amin-nas/Sketch-to-Clickthrough-HTML/master/.appcast.xml",
+  "author": "Amin Nassiri"
+}

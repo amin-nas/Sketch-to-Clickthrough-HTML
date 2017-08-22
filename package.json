@@ -1,0 +1,39 @@
+{
+  "name": "sketch-to-clickthrough-html",
+  "version": "1.3.0",
+  "description": "Sketch plugin to create click-through HTML",
+  "main": "index.js",
+  "resources": [
+    "Resources/hello.js"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "skpm build",
+    "publish": "skpm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amin-nas/Sketch-to-Clickthrough-HTML.git"
+  },
+  "author": "Amin Nassiri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amin-nas/Sketch-to-Clickthrough-HTML/issues"
+  },
+  "homepage": "https://github.com/amin-nas/Sketch-to-Clickthrough-HTML#readme",
+  "engines": {
+    "sketch": ">=3.0"
+  },
+  "devDependencies": {
+    "skpm": "^0.10.5"
+  },
+  "skpm": {
+    "manifest": "src/manifest.json",
+    "main": "plugin.sketchplugin"
+  },
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "sketch-module-web-view": "^0.1.5"
+  }
+}

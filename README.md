@@ -1,8 +1,8 @@
-> Tested with Sketch version 42
+> Tested with Sketch version 46
 
 # Sketch to Click-through HTML
 
-Convert your artboards into HTML pages.
+Create HTML pages with images of artboards, and add hotspots on top.
 
 ##### Installation
 
