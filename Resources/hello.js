@@ -1,27 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import pluginCall from 'sketch-module-web-view/client';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import pluginCall from 'sketch-module-web-view/client'
 
+class Preferences extends React.Component {
 
-class Hello extends React.Component {
+	constructor (props) {
+    super(props)
+    this.state = {
+      artboards: window.artboards || {}
+    }
+  }
 
-	constructor() {
-		super();
-		this.testFunction = this.testFunction.bind(this);
-	}
-
-	testFunction () {
-		pluginCall('nativeLog', 'Called from the webview againnnn');
-	}
-
-	render() {
-	// Any where else
-		return (
-			<div>
-				<button onClick={(e) => this.testFunction(e)}>Hello there</button>
-			</div>
-		)
-	}
+  render () {
+    console.log(this.state.artboards)
+    return (
+      <div>
+        Hi there
+      </div>
+    )
+  }
 }
 
-ReactDOM.render(<Hello/>, document.getElementById('container'));
+ReactDOM.render(<Preferences/>, document.getElementById('container'));

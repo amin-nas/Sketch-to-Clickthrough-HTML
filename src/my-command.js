@@ -1,33 +1,28 @@
-import WebUI from 'sketch-module-web-view';
+import WebUI from 'sketch-module-web-view'
+import { getUserPreferences, setUserPreferences } from './preferences'
+import { getArtboards } from './common'
 
-/*
 export default function (context) {
-  context.document.showMessage('It\'s alive 🙌')
-}
-*/
-
-const options = {
-  identifier: 'unique.id', // to reuse the UI
-  x: 0,
-  y: 0,
-  width: 500,
-  height: 320,
-  background: NSColor.whiteColor(),
-  onlyShowCloseButton: false,
-  title: '<HTML />',
-  hideTitleBar: false,
-  shouldKeepAround: true,
-  frameLoadDelegate: { // https://developer.apple.com/reference/webkit/webframeloaddelegate?language=objc
-    'webView:didFinishLoadForFrame:': function (webView, webFrame) {
-        WebUI.clear();
-    }
-  },
-  uiDelegate: {},
-  handlers: {
-    nativeLog: function (s) {
-      context.document.showMessage(s)
-    }
+  const artboards = {
+    name: "Page 1"  
   }
-}
 
-const webUI = new WebUI(context, 'hello.html', options);
+  
+  const webUI = new WebUI(context, 'hello.html', {
+    identifier: 'git-sketch-plugin.preferences',
+    width: 340,
+    height: 400,
+    onlyShowCloseButton: true,
+    hideTitleBar: true,
+    handlers: {
+      savePreferences (prefs) {
+        executeSafely(context, function () {
+          webUI.panel.close()
+          WebUI.clean()
+          context.document.showMessage('Preferences updated')
+        })
+      }
+    }
+  })
+  webUI.eval('window.artboards=' + JSON.stringify(artboards))
+}

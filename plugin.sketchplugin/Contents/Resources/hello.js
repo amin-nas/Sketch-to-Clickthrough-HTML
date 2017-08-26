@@ -9759,59 +9759,40 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Hello = function (_React$Component) {
-	_inherits(Hello, _React$Component);
+var Preferences = function (_React$Component) {
+  _inherits(Preferences, _React$Component);
 
-	function Hello() {
-		_classCallCheck(this, Hello);
+  function Preferences(props) {
+    _classCallCheck(this, Preferences);
 
-		var _this = _possibleConstructorReturn(this, (Hello.__proto__ || Object.getPrototypeOf(Hello)).call(this));
+    var _this = _possibleConstructorReturn(this, (Preferences.__proto__ || Object.getPrototypeOf(Preferences)).call(this, props));
 
-		_this.testFunction = _this.testFunction.bind(_this);
-		return _this;
-	}
+    _this.state = {
+      artboards: window.artboards || {}
+    };
+    return _this;
+  }
 
-	_createClass(Hello, [{
-		key: 'testFunction',
-		value: function () {
-			function testFunction() {
-				(0, _client2['default'])('nativeLog', 'Called from the webview againnnn');
-			}
+  _createClass(Preferences, [{
+    key: 'render',
+    value: function () {
+      function render() {
+        console.log(this.state.artboards);
+        return _react2['default'].createElement(
+          'div',
+          null,
+          'Hi there'
+        );
+      }
 
-			return testFunction;
-		}()
-	}, {
-		key: 'render',
-		value: function () {
-			function render() {
-				var _this2 = this;
+      return render;
+    }()
+  }]);
 
-				// Any where else
-				return _react2['default'].createElement(
-					'div',
-					null,
-					_react2['default'].createElement(
-						'button',
-						{ onClick: function () {
-								function onClick(e) {
-									return _this2.testFunction(e);
-								}
-
-								return onClick;
-							}() },
-						'Hello there'
-					)
-				);
-			}
-
-			return render;
-		}()
-	}]);
-
-	return Hello;
+  return Preferences;
 }(_react2['default'].Component);
 
-_reactDom2['default'].render(_react2['default'].createElement(Hello, null), document.getElementById('container'));
+_reactDom2['default'].render(_react2['default'].createElement(Preferences, null), document.getElementById('container'));
 
 /***/ }),
 /* 82 */

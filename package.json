@@ -34,6 +34,9 @@
   "dependencies": {
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "sketch-module-web-view": "^0.1.5"
+    "sketch-module-fs": "^0.1.2",
+    "sketch-module-user-preferences": "^1.0.1",
+    "sketch-module-web-view": "^0.1.5",
+    "sketch-polyfill-console": "^0.1.0"
   }
 }
