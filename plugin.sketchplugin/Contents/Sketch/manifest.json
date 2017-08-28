@@ -3,15 +3,27 @@
   "bundleVersion": 1,
   "commands": [
     {
-      "name": "my-command",
-      "identifier": "my-command-identifier",
-      "script": "my-command.js"
+      "name": "Set Link",
+      "identifier": "set-link-identifier",
+      "script": "link.js"
+    },
+    {
+      "name": "export",
+      "identifier": "export-identifier",
+      "script": "export.js"
+    },
+    {
+      "name": "Get link",
+      "identifier": "get-link-identifier",
+      "script": "getLink.js"
     }
   ],
   "menu": {
-    "title": "sketch-to-clickthrough-html",
+    "title": "clickthrough-html",
     "items": [
-      "my-command-identifier"
+      "set-link-identifier",
+      "export-identifier",
+      "get-link-identifier"
     ]
   },
   "version": "1.3.0",

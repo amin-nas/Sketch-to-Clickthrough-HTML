@@ -7,18 +7,18 @@ class Preferences extends React.Component {
 	constructor (props) {
     super(props)
     this.state = {
-      artboards: window.artboards || {}
+      prefs: window.prefs || {}
     }
   }
 
   render () {
-    console.log(this.state.artboards)
+    console.log(this.state.prefs)
     return (
       <div>
-        Hi there
+        {JSON.stringify(this.state.prefs)}
       </div>
     )
   }
 }
 
-ReactDOM.render(<Preferences/>, document.getElementById('container'));
+ReactDOM.render(<Preferences/>, document.getElementById('container'))
