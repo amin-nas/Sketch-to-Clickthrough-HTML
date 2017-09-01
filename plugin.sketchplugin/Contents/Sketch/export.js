@@ -65,69 +65,11 @@ var exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {/* globals log */
-
-var console = {
-  log: log,
-  warn: log,
-  error: log,
-  dump: function (obj) {
-    log('###############################################')
-    log('## Dumping object ' + obj)
-    if (obj.className) {
-      log('## obj class is: ' + obj.className())
-    }
-    log('###############################################')
-
-    if (obj.class && obj.class().mocha) {
-      log('obj.properties:')
-      log(obj.class().mocha().properties())
-      log('obj.propertiesWithAncestors:')
-      log(obj.class().mocha().propertiesWithAncestors())
-
-      log('obj.classMethods:')
-      log(obj.class().mocha().classMethods())
-      log('obj.classMethodsWithAncestors:')
-      log(obj.class().mocha().classMethodsWithAncestors())
-
-      log('obj.instanceMethods:')
-      log(obj.class().mocha().instanceMethods())
-      log('obj.instanceMethodsWithAncestors:')
-      log(obj.class().mocha().instanceMethodsWithAncestors())
-
-      log('obj.protocols:')
-      log(obj.class().mocha().protocols())
-      log('obj.protocolsWithAncestors:')
-      log(obj.class().mocha().protocolsWithAncestors())
-    }
-
-    if (obj.treeAsDictionary) {
-      log('obj.treeAsDictionary():')
-      log(obj.treeAsDictionary())
-    }
-  }
-}
-
-// polyfill the global object
-var commonjsGlobal = typeof global !== 'undefined'
-  ? global
-  : this
-
-commonjsGlobal.console = commonjsGlobal.console || console
-
-module.exports = console
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -147,7 +89,7 @@ exports['default'] = function (context) {
   webUI.eval('window.prefs=' + JSON.stringify(prefs));
 };
 
-var _sketchModuleWebView = __webpack_require__(2);
+var _sketchModuleWebView = __webpack_require__(1);
 
 var _sketchModuleWebView2 = _interopRequireDefault(_sketchModuleWebView);
 
@@ -156,12 +98,12 @@ var _preferences = __webpack_require__(5);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* globals NSUUID NSThread NSPanel NSMakeRect NSTexturedBackgroundWindowMask NSTitledWindowMask NSWindowTitleHidden NSClosableWindowMask NSColor NSWindowMiniaturizeButton NSWindowZoomButton NSFloatingWindowLevel WebView COScript */
-var MochaJSDelegate = __webpack_require__(3)
-var parseQuery = __webpack_require__(4)
+var MochaJSDelegate = __webpack_require__(2)
+var parseQuery = __webpack_require__(3)
 
 var coScript = COScript.currentCOScript()
 
@@ -261,7 +203,7 @@ module.exports = WebUI
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports) {
 
 /* globals NSUUID MOClassDescription NSObject NSSelectorFromString NSClassFromString */
@@ -330,7 +272,7 @@ module.exports = function (selectorHandlerDict, superclass) {
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = function (query) {
@@ -346,6 +288,64 @@ module.exports = function (query) {
   return query
 }
 
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/* globals log */
+
+var console = {
+  log: log,
+  warn: log,
+  error: log,
+  dump: function (obj) {
+    log('###############################################')
+    log('## Dumping object ' + obj)
+    if (obj.className) {
+      log('## obj class is: ' + obj.className())
+    }
+    log('###############################################')
+
+    if (obj.class && obj.class().mocha) {
+      log('obj.properties:')
+      log(obj.class().mocha().properties())
+      log('obj.propertiesWithAncestors:')
+      log(obj.class().mocha().propertiesWithAncestors())
+
+      log('obj.classMethods:')
+      log(obj.class().mocha().classMethods())
+      log('obj.classMethodsWithAncestors:')
+      log(obj.class().mocha().classMethodsWithAncestors())
+
+      log('obj.instanceMethods:')
+      log(obj.class().mocha().instanceMethods())
+      log('obj.instanceMethodsWithAncestors:')
+      log(obj.class().mocha().instanceMethodsWithAncestors())
+
+      log('obj.protocols:')
+      log(obj.class().mocha().protocols())
+      log('obj.protocolsWithAncestors:')
+      log(obj.class().mocha().protocolsWithAncestors())
+    }
+
+    if (obj.treeAsDictionary) {
+      log('obj.treeAsDictionary():')
+      log(obj.treeAsDictionary())
+    }
+  }
+}
+
+// polyfill the global object
+var commonjsGlobal = typeof global !== 'undefined'
+  ? global
+  : this
+
+commonjsGlobal.console = commonjsGlobal.console || console
+
+module.exports = console
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 5 */
@@ -411,7 +411,7 @@ function setUserPreferences(context, prefs) {
   }
   return _sketchModuleUserPreferences2['default'].setUserPreferences(keyPref, globalPrefs);
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 6 */
@@ -1010,7 +1010,7 @@ function TextArea(x, y, width, heigh) {
   }
 
   */
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ })
 /******/ ]);

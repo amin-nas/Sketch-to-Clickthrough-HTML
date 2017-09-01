@@ -1,5 +1,5 @@
 import WebUI from 'sketch-module-web-view'
-import { getUserPreferences } from './preferences'
+import { getUserPreferences } from '../preferences'
 
 
 export default function (context) {

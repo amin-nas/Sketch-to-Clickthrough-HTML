@@ -5,9 +5,7 @@
   "main": "index.js",
   "resources": [
     "Resources/preferences.js",
-    "Resources/link.js",
-    "Resources/index.js",
-    "Resources/About.js"
+    "Resources/link.js"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

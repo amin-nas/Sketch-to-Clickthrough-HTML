@@ -9,19 +9,14 @@
 		},{
 			"name": "export",
 			"identifier": "export-identifier",
-			"script": "./export.js"
-		},{
-			"name": "Get link",
-			"identifier": "get-link-identifier",
-			"script": "./commands/getLink.js"
+			"script": "./commands/export.js"
 		}
 	],
 	"menu": {
 		"title": "clickthrough-html",
 		"items": [
 			"set-link-identifier",
-			"export-identifier",
-			"get-link-identifier"
+			"export-identifier"
 		]
 	}
 }
