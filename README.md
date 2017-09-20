@@ -55,5 +55,4 @@ All are welcome  :)
 
 ## License ##
 
-What's that?!
-Do as you wish and share the good stuff.
+MIT
